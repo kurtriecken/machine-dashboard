@@ -24,3 +24,8 @@ def add_machine(machine: MachineBase):
     )
     mock_machines.append(new_machine)
     return new_machine
+
+@router.delete('/machines/delete/{id}')
+def delete_machine(id: int):
+    mock_machines[:] = [item for item in mock_machines if item.id != id]
+    return {"message": "Item deleted successfully!"}
