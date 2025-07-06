@@ -1,7 +1,9 @@
 from pydantic import BaseModel
 
-class Machine(BaseModel):
-    id: int
+class MachineBase(BaseModel):
     name: str
     status: str
     temperature: float
+
+class Machine(MachineBase):
+    id: int
