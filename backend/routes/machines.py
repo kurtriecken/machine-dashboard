@@ -1,4 +1,6 @@
-from fastapi import APIRouter
+import asyncio
+import random
+from fastapi import APIRouter, BackgroundTasks
 from models import Machine, MachineBase
 
 router = APIRouter()
@@ -9,6 +11,17 @@ mock_machines = [
     Machine(id=2, name="Drill Press", status="maintenance", temperature=0.0),
     Machine(id=3, name="3D Printer", status="idle", temperature=37.5)
 ]
+
+# possible statuses
+statuses = ["operational", "idle", "maintenance"]
+
+async def simulate_machine_updates():
+    while True:
+        await asyncio.sleep(5)
+        for m in mock_machines:
+            m.temperature += random.uniform(-1.0, 1.0)
+            if random.random() < 0.2:
+                m.status = random.choice(statuses)
 
 @router.get("/machines", response_model=list[Machine])
 def get_machines():
