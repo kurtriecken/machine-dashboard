@@ -1,7 +1,4 @@
-import React from "react"
-import {
-  Line
-} from "react-chartjs-2"
+import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -10,8 +7,11 @@ import {
   LineElement,
   Title,
   Tooltip,
-  Legend
-} from "chart.js"
+  Legend,
+  TimeScale,
+} from "chart.js";
+import type { Machine } from "../types/machines";
+import { useEffect, useState } from "react";
 
 ChartJS.register(
   CategoryScale,
@@ -20,51 +20,109 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
-)
+  Legend,
+  TimeScale
+);
 
 type MachineHistoryEntry = {
-  timestamp: string
-  temperature: number
-}
+  timestamp: string;
+  temperature: number;
+};
 
 type Props = {
-  machineName: string
-  history: MachineHistoryEntry[]
-}
+  machine: Machine;
+};
 
-export default function MachineChart({ machineName, history }: Props) {
+export default function MachineChart({ machine }: Props) {
+  const [flash, setFlash] = useState(false);
+
+  const outOfRange = machine.history.some(
+    (entry) =>
+      entry.temperature < machine.range_min ||
+      entry.temperature > machine.range_max
+  );
+
+  const lastFive = machine.history.slice(-5);
+  const lastFiveOutOfRange = lastFive.every(
+    (entry) =>
+      entry.temperature < machine.range_min ||
+      entry.temperature > machine.range_max
+  );
+
+  const warningStyle = {
+    color: flash ? "white" : "red",
+    backgroundColor: flash ? "red" : "transparent",
+    fontWeight: "bold",
+    padding: "0.5rem",
+    borderRadius: "0.25rem",
+    textAlign: "center" as const,
+    transition: "all 0.3s ease",
+  };
+
+  const lineColor = lastFiveOutOfRange ? "red" : "rgba(54, 162, 235, 1)";
+
+  useEffect(() => {
+    if (lastFiveOutOfRange) {
+      const interval = setInterval(() => setFlash((f) => !f), 500);
+      return () => clearInterval(interval);
+    } else {
+      setFlash(false);
+    }
+  }, [lastFiveOutOfRange]);
+
   const data = {
-    labels: history.map((entry) => new Date(entry.timestamp).toLocaleTimeString()),
     datasets: [
       {
-        label: "Temperature (°F)",
-        data: history.map((entry) => entry.temperature),
-        borderColor: "rgba(54, 162, 235, 1)",
-        backgroundColor: "rgba(54, 162, 235, 0.2)",
+        label: machine.name,
+        data: machine.history.map((entry) => ({
+          x: entry.timestamp,
+          y: entry.temperature,
+        })),
+        borderColor: lineColor,
+        pointBackgroundColor: (ctx) => {
+          const val = ctx.raw.y;
+          return val < machine.range_min || val > machine.range_max
+            ? "red"
+            : lineColor;
+        },
         tension: 0.3,
-        fill: true,
-      }
-    ]
-  }
+      },
+    ],
+  };
 
   const options = {
     responsive: true,
-    plugins: {
-      legend: {
-        position: "top" as const
+    x: {
+      type: "time" as const,
+      time: {
+        unit: "minute",
+        tooltipFormat: "HH:mm",
+        displayFormats: {
+          minute: "HH:mm",
+        },
       },
       title: {
         display: true,
-        text: `Temperature Over Time - ${machineName}`
-      }
+        text: "Time",
+      },
     },
-    scales: {
-      y: {
-        beginAtZero: false
-      }
-    }
-  }
+  };
 
-  return <Line options={options} data={data} />
+  return (
+    <div className="p-4 rounded-xl border bg-white shadow-md">
+      {outOfRange && (
+        <div
+          style={
+            lastFiveOutOfRange
+              ? warningStyle
+              : { color: "red", fontWeight: "bold", marginBottom: "0.5rem" }
+          }
+        >
+          ⚠ Out-of-range temperatures detected! Expected range:{" "}
+          {machine.range_min}°F - {machine.range_max}°F
+        </div>
+      )}
+      <Line data={data} options={options} />
+    </div>
+  );
 }

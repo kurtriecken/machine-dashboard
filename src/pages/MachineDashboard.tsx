@@ -1,14 +1,6 @@
 import React, { useEffect, useState } from "react"
 import MachineChart from "../components/MachineChart"
-
-type Machine = {
-  id: number
-  name: string
-  status: string
-  range_min: number
-  range_max: number
-  history: Array<{temperature: number, timestamp: string, status: string}>
-}
+import type { Machine } from "../types/machines"
 
 export default function MachineDashboard() {
   const [machines, setMachines] = useState<Machine[]>([])
@@ -52,8 +44,7 @@ export default function MachineDashboard() {
               <p>Temperature: {latest?.temperature.toFixed(2)}°F</p>
 
               <MachineChart 
-                machineName={machine.name}
-                history={machine.history}
+                machine={machine}
               />
             </div>
           )
