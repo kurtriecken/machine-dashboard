@@ -12,6 +12,7 @@ import {
 } from "chart.js";
 import type { Machine } from "../types/machines";
 import { useEffect, useState } from "react";
+import 'chartjs-adapter-date-fns';
 
 ChartJS.register(
   CategoryScale,
@@ -90,8 +91,9 @@ export default function MachineChart({ machine }: Props) {
     ],
   };
 
-  const options = {
-    responsive: true,
+const options = {
+  responsive: true,
+  scales: {
     x: {
       type: "time" as const,
       time: {
@@ -106,7 +108,23 @@ export default function MachineChart({ machine }: Props) {
         text: "Time",
       },
     },
-  };
+    y: {
+      title: {
+        display: true,
+        text: "Temperature (°F)",
+      },
+    },
+  },
+  plugins: {
+    legend: {
+      display: true,
+    },
+    tooltip: {
+      mode: "index" as const,
+      intersect: false,
+    },
+  },
+};
 
   return (
     <div className="p-4 rounded-xl border bg-white shadow-md">

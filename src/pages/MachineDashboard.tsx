@@ -32,16 +32,24 @@ export default function MachineDashboard() {
   // }, [])
 
   return (
-    <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
-      <h1 style={{ color: "#2a4365" }}>Machine Dashboard</h1>
-      <ul style={{ listStyle: "none", padding: 0 }}>
+    <div style={{
+        minHeight: "100vh",
+        backgroundColor: "#f5f8fa", // light soft shade, change as you like
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        padding: "2rem",
+        boxSizing: "border-box",
+      }}>
+      <h1 style={{ textAlign: "center", marginBottom: "1.5rem", color: "#1a202c" }}>Machine Dashboard</h1>
+      <ul style={{ width: "90%", maxWidth: "900px" }}>
         {machines.map((machine: Machine) => {
           const latest = machine.history[machine.history.length - 1]
           return (
             <div key={machine.id} style={{marginBottom: "2rem"}}>
-              <h2>{machine.name}</h2>
-              <p>Status: <strong>{machine.status}</strong></p>
-              <p>Temperature: {latest?.temperature.toFixed(2)}°F</p>
+              <h2 style={{ textAlign: "center", marginBottom: "0.5rem" }}>{machine.name}</h2>
+              <p style={{ textAlign: "center", marginBottom: "0.5rem" }}>Status: <strong>{machine.status}</strong></p>
+              <p style={{ textAlign: "center", marginBottom: "1rem" }}>Temperature: {latest?.temperature.toFixed(2)}°F</p>
 
               <MachineChart 
                 machine={machine}
