@@ -1,12 +1,49 @@
-# React + Vite
+# Machine Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A real-time dashboard application for monitoring and managing industrial machine equipment.  
+Built with a modern full-stack architecture to display live machine temperature data, visualize trends, and provide operational controls.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+- Live temperature updates with WebSocket-powered real-time data streaming  
+- Interactive time series charts with out-of-range alerts and color-coded data points  
+- Ability to trigger machine temperature normalization from the frontend  
+- Responsive and user-friendly UI with loading states and toast notifications  
+- Configurable expected temperature ranges with auto simulation of machine behavior
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## Tech Stack
+
+### Backend
+
+- **Python 3.13** — Core language  
+- **FastAPI** — Fast, modern, asynchronous web framework  
+- **Pydantic** — Data validation and settings management  
+- **asyncio** — Asynchronous tasks and real-time simulation  
+- **Uvicorn** — ASGI server for running FastAPI app  
+- **WebSockets** — Real-time two-way communication between server and client
+
+### Frontend
+
+- **React 18** — Modern UI library  
+- **Vite** — Lightning-fast frontend build tool and dev server  
+- **TypeScript** — Typed JavaScript for robust frontend development  
+- **Chart.js & react-chartjs-2** — Flexible and powerful charting library for visualizing machine data  
+- **react-hot-toast** — Lightweight toast notifications  
+- **react-spinners** — Loading spinner components for better UX  
+
+---
+
+## Installation & Setup
+
+### Backend
+
+1. Create and activate a Python virtual environment:
+
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # macOS/Linux
+   venv\Scripts\activate     # Windows
