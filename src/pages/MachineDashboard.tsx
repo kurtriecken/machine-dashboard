@@ -1,34 +1,30 @@
 import React, { useEffect, useState } from "react"
 import MachineChart from "../components/MachineChart"
 import type { Machine } from "../types/machines"
+import { useMachineSocket } from "../hooks/useMachineSocket"
 
 export default function MachineDashboard() {
-  const [machines, setMachines] = useState<Machine[]>([])
+  // const [machines, setMachines] = useState<Machine[]>([])
 
-  useEffect(() => {
-    let interval: number
-
-    const fetchData = async () => {
-      try {
-        const response = await fetch("http://localhost:8000/machines")
-        const data = await response.json()
-        setMachines(data)
-      } catch (err) {
-        console.error("Failed to fetch machines: ", err)
-      }
-    }
-
-    fetchData()
-    interval = setInterval(fetchData, 5000)
-    
-    return () => clearInterval(interval)
-  })
+  const machines = useMachineSocket()
 
   // useEffect(() => {
-  //   fetch("http://localhost:8000/machines")
-  //     .then((res) => res.json())
-  //     .then((data) => setMachines(data))
-  //     .catch((err) => console.error("Failed to fetch machines:", err))
+  //   let interval: number
+
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch("http://localhost:8000/machines")
+  //       const data = await response.json()
+  //       setMachines(data)
+  //     } catch (err) {
+  //       console.error("Failed to fetch machines: ", err)
+  //     }
+  //   }
+
+  //   fetchData()
+  //   interval = setInterval(fetchData, 5000)
+    
+  //   return () => clearInterval(interval)
   // }, [])
 
   return (

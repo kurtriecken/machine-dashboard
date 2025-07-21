@@ -5,4 +5,5 @@ export type Machine = {
   range_min: number
   range_max: number
   history: Array<{temperature: number, timestamp: string, status: string}>
+  normalizing: boolean
 }

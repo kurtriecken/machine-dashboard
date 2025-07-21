@@ -66,8 +66,15 @@ router = APIRouter()
 def get_machines():
     return [m.latest() for m in machines]
 
-@router.post("/machines/{machine.id}/normalize")
+@router.post("/machines/{machine_id}/normalize")
 async def normalize_machine_temperature(machine_id: int):
+    machine = next((m for m in machines if m.id == machine_id), None)
+    if not machine:
+        return {"error": "Machine not found"}
+    
+    machine.normalizing = True
+    machine.in_range_cycles = 0
+    
     print(f"Normalizing machine {machine_id}")
     return {"message": f"Normalization triggered for machine {machine_id}"}
 # @router.post('/machines/add', response_model=Machine)
