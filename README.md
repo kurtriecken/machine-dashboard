@@ -47,3 +47,70 @@ Built with a modern full-stack architecture to display live machine temperature 
    python -m venv venv
    source venv/bin/activate  # macOS/Linux
    venv\Scripts\activate     # Windows
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Run the FastAPI server:
+
+   ```bash
+   uvicorn main:app --reload
+   ```
+
+### Frontend
+
+1. Install Node.js dependencies:
+
+   ```bash
+   npm install
+   ```
+
+2. Start the development server:
+
+   ```bash
+   npm run dev
+   ```
+
+3. Open your browser at [http://localhost:5173](http://localhost:5173) 🌍
+
+---
+
+## 🎯 Usage
+
+- The dashboard automatically connects to the backend WebSocket to receive live machine data.  
+- Click the **Normalize Temperature** button if machines are out of range to start auto-correction.  
+- Visual alerts and toasts notify you of machine status changes and normalization progress.
+
+---
+
+## 📁 Project Structure
+
+- `/backend` — FastAPI backend with machine simulation, WebSocket endpoint, and API routes  
+- `/frontend` — React + Vite frontend with components, charts, and UI logic  
+
+---
+
+## 🤝 Contributing
+
+Feel free to submit issues or pull requests!  
+Please maintain consistent code style and write descriptive commit messages.
+
+---
+
+## 📄 License
+
+This project is open source under the MIT License.
+
+---
+
+## 🙏 Acknowledgements
+
+Thanks to the amazing maintainers of [FastAPI](https://fastapi.tiangolo.com/), [React](https://reactjs.org/), [Chart.js](https://www.chartjs.org/), and the vibrant open source community for making this project possible!
+
+---
+
+If you'd like, I can help generate your `requirements.txt` and `package.json` based on your dependencies. Just ask! 🎉
