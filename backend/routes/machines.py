@@ -1,71 +1,75 @@
 from fastapi import APIRouter
-from models import MachineWithHistory, MachineHistoryEntry
+from models import MachineWithHistory
 from typing import List
-import asyncio
-import random
-from datetime import datetime
-from collections import deque
+from data import machines
+# import asyncio
+# import random
+# from datetime import datetime
+# from collections import deque
 
 router = APIRouter()
 
-class MachineHistory:
-    def __init__(self, id, name, status, range_min, range_max):
-        self.id = id
-        self.name = name
-        self.status = status
-        self.history = deque(maxlen=50) # keeps the last 50 readings only
-        self.range_min = range_min
-        self.range_max = range_max
+# class MachineHistory:
+#     def __init__(self, id, name, status, range_min, range_max):
+#         self.id = id
+#         self.name = name
+#         self.status = status
+#         self.history = deque(maxlen=50) # keeps the last 50 readings only
+#         self.range_min = range_min
+#         self.range_max = range_max
 
-        # initialize with the first reading timestamped now
-        initial_temp = (range_min + range_max) / 2
-        self.history.append({
-            "timestamp": datetime.now().isoformat(),
-            "temperature": initial_temp,
-            "status": status,
-        })
+#         # initialize with the first reading timestamped now
+#         initial_temp = (range_min + range_max) / 2
+#         self.history.append({
+#             "timestamp": datetime.now().isoformat(),
+#             "temperature": initial_temp,
+#             "status": status,
+#         })
     
-    def update(self, temperature, status):
-        self.status = status
-        self.history.append({
-            "timestamp": datetime.now().isoformat(),
-            "temperature": temperature,
-            "status": status,
-        })
+#     def update(self, temperature, status):
+#         self.status = status
+#         self.history.append({
+#             "timestamp": datetime.now().isoformat(),
+#             "temperature": temperature,
+#             "status": status,
+#         })
     
-    def latest(self):
-        return {
-            "id": self.id,
-            "name": self.name,
-            "status": self.status,
-            "history": list(self.history),
-            "range_min": self.range_min,
-            "range_max": self.range_max
-        }
+#     def latest(self):
+#         return {
+#             "id": self.id,
+#             "name": self.name,
+#             "status": self.status,
+#             "history": list(self.history),
+#             "range_min": self.range_min,
+#             "range_max": self.range_max
+#         }
 
-machines = [
-    MachineHistory(1, "CNC Lathe 1", "operational", 65, 75),
-    MachineHistory(2, "Drill Press", "maintenance", 0, 5),
-    MachineHistory(3, "3D Printer", "idle", 35, 40),
-]
+# machines = [
+#     MachineHistory(1, "CNC Lathe 1", "operational", 65, 75),
+#     MachineHistory(2, "Drill Press", "maintenance", 0, 5),
+#     MachineHistory(3, "3D Printer", "idle", 35, 40),
+# ]
 
-statuses = ["operational", "idle", "maintenance"]
+# statuses = ["operational", "idle", "maintenance"]
 
-async def simulate_machine_updates():
-    while True:
-        await asyncio.sleep(5)
-        for m in machines:
-            new_temp = m.history[-1]["temperature"] + random.uniform(-1.5, 1.5)
-            new_status = m.status
-            if random.random() < 0.2:
-                new_status = random.choice(statuses)
-            m.update(new_temp, new_status)
+# async def simulate_machine_updates():
+#     while True:
+#         await asyncio.sleep(5)
+#         for m in machines:
+#             new_temp = m.history[-1]["temperature"] + random.uniform(-1.5, 1.5)
+#             new_status = m.status
+#             if random.random() < 0.2:
+#                 new_status = random.choice(statuses)
+#             m.update(new_temp, new_status)
 
 @router.get("/machines", response_model=List[MachineWithHistory])
 def get_machines():
     return [m.latest() for m in machines]
 
-
+@router.post("/machines/{machine.id}/normalize")
+async def normalize_machine_temperature(machine_id: int):
+    print(f"Normalizing machine {machine_id}")
+    return {"message": f"Normalization triggered for machine {machine_id}"}
 # @router.post('/machines/add', response_model=Machine)
 # def add_machine(machine: MachineBase):
 #     new_machine = Machine(
